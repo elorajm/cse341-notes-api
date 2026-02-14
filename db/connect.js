@@ -1,24 +1,33 @@
 const { MongoClient } = require("mongodb");
 
-let database;
+let db;
+let client;
 
 const connectToDatabase = async () => {
-  if (database) return database;
+  try {
+    const uri = process.env.MONGODB_URI;
+    if (!uri) {
+      throw new Error("Missing MONGODB_URI in environment variables.");
+    }
 
-  const client = new MongoClient(process.env.MONGODB_URI);
+    client = new MongoClient(uri);
+    await client.connect();
 
-  await client.connect();
-  database = client.db();
+    db = client.db(process.env.DB_NAME || "cse341-notes-api");
 
-  console.log("Connected to MongoDB");
-  return database;
+    console.log("Connected to MongoDB");
+    return db;
+  } catch (error) {
+    console.error("MongoDB connection failed:", error);
+    process.exit(1); // stop the app if DB fails
+  }
 };
 
 const getDb = () => {
-  if (!database) {
-    throw new Error("Database not initialized");
+  if (!db) {
+    throw new Error("Database not initialized. Call connectToDatabase first.");
   }
-  return database;
+  return db;
 };
 
 module.exports = { connectToDatabase, getDb };

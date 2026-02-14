@@ -1,3 +1,2 @@
 node_modules
 .env
-MONGODB_URI=mongodb+srv://eloraathias_db_user:4v98HEqnN6crK9zA@<cluster-name>.mongodb.net/notesDB

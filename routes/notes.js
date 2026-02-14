@@ -1,15 +1,5 @@
 const router = require("express").Router();
-
-// Temporary in-memory data (no MongoDB yet)
-let notes = [
-  {
-    _id: "1",
-    title: "First note",
-    content: "This is a test note.",
-    createdAt: new Date()
-  }
-];
-let nextId = 2;
+const notesController = require("../controllers/notesController");
 
 /**
  * @swagger
@@ -54,9 +44,7 @@ let nextId = 2;
  *       200:
  *         description: List of notes
  */
-router.get("/", (req, res) => {
-  res.status(200).json(notes);
-});
+router.get("/", notesController.getAllNotes);
 
 /**
  * @swagger
@@ -72,12 +60,13 @@ router.get("/", (req, res) => {
  *           type: string
  *     responses:
  *       200:
- *         description: One note (or null if not found)
+ *         description: One note
+ *       404:
+ *         description: Note not found
+ *       400:
+ *         description: Invalid ID
  */
-router.get("/:id", (req, res) => {
-  const note = notes.find((n) => n._id === req.params.id) || null;
-  res.status(200).json(note);
-});
+router.get("/:id", notesController.getNoteById);
 
 /**
  * @swagger
@@ -97,23 +86,7 @@ router.get("/:id", (req, res) => {
  *       400:
  *         description: Missing required fields
  */
-router.post("/", (req, res) => {
-  const { title, content } = req.body;
-
-  if (!title || !content) {
-    return res.status(400).json({ message: "Missing fields: title, content" });
-  }
-
-  const newNote = {
-    _id: String(nextId++),
-    title,
-    content,
-    createdAt: new Date()
-  };
-
-  notes.push(newNote);
-  res.status(201).json({ id: newNote._id });
-});
+router.post("/", notesController.createNote);
 
 /**
  * @swagger
@@ -139,23 +112,9 @@ router.post("/", (req, res) => {
  *       404:
  *         description: Note not found
  *       400:
- *         description: Missing required fields
+ *         description: Missing required fields or invalid ID
  */
-router.put("/:id", (req, res) => {
-  const { title, content } = req.body;
-
-  if (!title || !content) {
-    return res.status(400).json({ message: "Missing fields: title, content" });
-  }
-
-  const index = notes.findIndex((n) => n._id === req.params.id);
-  if (index === -1) {
-    return res.status(404).json({ message: "Note not found" });
-  }
-
-  notes[index] = { ...notes[index], title, content };
-  return res.status(204).send();
-});
+router.put("/:id", notesController.updateNote);
 
 /**
  * @swagger
@@ -174,15 +133,9 @@ router.put("/:id", (req, res) => {
  *         description: Deleted successfully
  *       404:
  *         description: Note not found
+ *       400:
+ *         description: Invalid ID
  */
-router.delete("/:id", (req, res) => {
-  const index = notes.findIndex((n) => n._id === req.params.id);
-  if (index === -1) {
-    return res.status(404).json({ message: "Note not found" });
-  }
-
-  notes.splice(index, 1);
-  return res.status(200).json({ message: "Note deleted" });
-});
+router.delete("/:id", notesController.deleteNote);
 
 module.exports = router;
