@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notes App</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="nav-logo">&#128221;</span> Notes App
+    </div>
+    <div class="nav-user" id="nav-user">
+      <!-- Filled by app.js -->
+    </div>
+  </nav>
+
+  <section class="hero hidden" id="hero">
+    <div class="hero-content">
+      <h1>Your notes, all in one place</h1>
+      <p>Sign in with GitHub to create, organise, and pin your notes.</p>
+      <a href="/auth/github" class="btn btn-github">
+        <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+        Sign in with GitHub
+      </a>
+    </div>
+  </section>
+
+  <main class="dashboard hidden" id="dashboard">
+
+    <!-- Create note bar -->
+    <div class="create-bar">
+      <button class="btn btn-primary" id="new-note-btn">+ New Note</button>
+    </div>
+
+    <!-- Create / Edit form -->
+    <div class="form-card hidden" id="note-form-card">
+      <h2 id="form-title">New Note</h2>
+      <input type="hidden" id="edit-id" />
+      <div class="form-group">
+        <label for="f-title">Title <span class="required">*</span></label>
+        <input type="text" id="f-title" maxlength="100" placeholder="Note title" />
+      </div>
+      <div class="form-group">
+        <label for="f-content">Content <span class="required">*</span></label>
+        <textarea id="f-content" rows="4" placeholder="What's on your mind?"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="f-summary">Summary</label>
+        <input type="text" id="f-summary" maxlength="200" placeholder="Short description (optional)" />
+      </div>
+      <div class="form-group">
+        <label for="f-tags">Tags</label>
+        <input type="text" id="f-tags" placeholder="Comma-separated: work, ideas, todo" />
+      </div>
+      <div class="form-group form-group-inline">
+        <label>
+          <input type="checkbox" id="f-pinned" /> Pin this note
+        </label>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" id="save-btn">Save</button>
+        <button class="btn btn-ghost" id="cancel-btn">Cancel</button>
+        <p class="form-error hidden" id="form-error"></p>
+      </div>
+    </div>
+
+    <!-- Notes grid -->
+    <div id="notes-container">
+      <div id="pinned-section" class="hidden">
+        <h3 class="section-label">Pinned</h3>
+        <div class="notes-grid" id="pinned-grid"></div>
+      </div>
+      <div id="all-section">
+        <h3 class="section-label" id="all-label">Notes</h3>
+        <div class="notes-grid" id="notes-grid"></div>
+      </div>
+      <p class="empty-msg hidden" id="empty-msg">No notes yet — create one above!</p>
+    </div>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

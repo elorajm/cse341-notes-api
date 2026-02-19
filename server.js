@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const session = require("express-session");
 const passport = require("passport");
 const swaggerUi = require("swagger-ui-express");
@@ -82,6 +83,9 @@ const swaggerOptions = {
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// -------------------- Static Files --------------------
+app.use(express.static(path.join(__dirname, "public")));
 
 // -------------------- Routes --------------------
 app.use("/", require("./routes"));

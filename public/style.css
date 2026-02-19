@@ -1,0 +1,316 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f4f6fb;
+  color: #1e2235;
+  min-height: 100vh;
+}
+
+.navbar {
+  background: #1e2235;
+  color: #fff;
+  padding: 0 2rem;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.nav-brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.nav-logo { margin-right: 0.4rem; }
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #4f7ef7;
+}
+
+.nav-name { font-weight: 500; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  text-decoration: none;
+}
+.btn:active { transform: scale(0.97); }
+
+.btn-primary  { background: #4f7ef7; color: #fff; }
+.btn-primary:hover  { background: #3b6ae0; }
+
+.btn-danger   { background: #e84646; color: #fff; }
+.btn-danger:hover   { background: #c73333; }
+
+.btn-ghost    { background: transparent; color: #555; border: 1px solid #ccc; }
+.btn-ghost:hover    { background: #eee; }
+
+.btn-github {
+  background: #24292e;
+  color: #fff;
+  font-size: 1rem;
+  padding: 0.7rem 1.5rem;
+  border-radius: 10px;
+}
+.btn-github:hover { background: #3a3f45; }
+
+.btn-logout {
+  background: transparent;
+  color: #aab;
+  border: 1px solid #3a3f55;
+  font-size: 0.8rem;
+  padding: 0.3rem 0.75rem;
+}
+.btn-logout:hover { background: #2d3248; color: #fff; }
+
+.btn-icon {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: background 0.15s;
+}
+.btn-icon:hover { background: #eef2ff; }
+.btn-icon.danger:hover { background: #fff0f0; }
+
+.github-icon { width: 20px; height: 20px; }
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 60px);
+  text-align: center;
+  padding: 2rem;
+}
+
+.hero-content h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+  color: #1e2235;
+}
+
+.hero-content p {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.dashboard {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.create-bar {
+  margin-bottom: 1.5rem;
+}
+
+.form-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.75rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(79,126,247,0.1);
+  border: 1px solid #e0e7ff;
+}
+
+.form-card h2 {
+  font-size: 1.2rem;
+  margin-bottom: 1.25rem;
+  color: #1e2235;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 0.35rem;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid #d1d9f0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  background: #f8f9ff;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #4f7ef7;
+  box-shadow: 0 0 0 3px rgba(79,126,247,0.15);
+  background: #fff;
+}
+
+.form-group textarea { resize: vertical; min-height: 100px; }
+
+.form-group-inline { display: flex; align-items: center; gap: 0.5rem; }
+.form-group-inline label { margin: 0; display: flex; align-items: center; gap: 0.4rem; cursor: pointer; font-weight: 500; }
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.required { color: #e84646; }
+
+.form-error {
+  color: #e84646;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.section-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #888;
+  margin-bottom: 0.85rem;
+}
+
+#pinned-section { margin-bottom: 2rem; }
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.note-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 12px rgba(30,34,53,0.07);
+  border: 1px solid #e8ecf7;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  transition: box-shadow 0.2s, transform 0.15s;
+}
+
+.note-card:hover {
+  box-shadow: 0 6px 24px rgba(79,126,247,0.14);
+  transform: translateY(-2px);
+}
+
+.note-card.pinned {
+  border-left: 4px solid #4f7ef7;
+}
+
+.note-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.note-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e2235;
+  flex: 1;
+  word-break: break-word;
+}
+
+.note-actions { display: flex; gap: 0.2rem; flex-shrink: 0; }
+
+.note-summary {
+  font-size: 0.82rem;
+  color: #888;
+  font-style: italic;
+}
+
+.note-content {
+  font-size: 0.9rem;
+  color: #444;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.note-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.25rem;
+}
+
+.tag {
+  background: #eef2ff;
+  color: #4f7ef7;
+  border-radius: 20px;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.note-footer {
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: auto;
+  padding-top: 0.4rem;
+  border-top: 1px solid #f0f2fa;
+}
+
+.empty-msg {
+  text-align: center;
+  color: #aaa;
+  font-size: 1rem;
+  padding: 3rem 0;
+}
+
+.hidden { display: none !important; }
+
+@media (max-width: 600px) {
+  .notes-grid { grid-template-columns: 1fr; }
+  .hero-content h1 { font-size: 1.6rem; }
+  .navbar { padding: 0 1rem; }
+  .dashboard { padding: 1.25rem 1rem; }
+}
