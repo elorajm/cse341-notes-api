@@ -22,7 +22,7 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false } // set to true when deploying with HTTPS on Render
+    cookie: { secure: process.env.NODE_ENV === "production" }
   })
 );
 
