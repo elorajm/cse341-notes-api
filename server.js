@@ -13,6 +13,8 @@ const configurePassport = require("./config/passport");
 const app = express();
 
 // -------------------- Middleware --------------------
+// Required so express-session sets secure cookies correctly behind Render's proxy
+app.set("trust proxy", 1);
 app.use(cors());
 app.use(express.json());
 
