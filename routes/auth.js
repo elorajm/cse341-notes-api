@@ -49,7 +49,7 @@ router.get(
   "/github/callback",
   passport.authenticate("github", { failureRedirect: "/auth/failure" }),
   (req, res) => {
-    res.status(200).json({ message: "Login successful", user: req.user });
+    res.redirect("/");
   }
 );
 
@@ -95,7 +95,7 @@ router.get("/profile", (req, res) => {
 router.get("/logout", (req, res, next) => {
   req.logout((err) => {
     if (err) return next(err);
-    res.status(200).json({ message: "Logged out successfully" });
+    res.redirect("/");
   });
 });
 
