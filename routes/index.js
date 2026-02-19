@@ -14,7 +14,8 @@ router.get("/", (req, res) => {
   res.status(200).send("CSE 341 Notes API is running");
 });
 
-// Notes routes live in routes/notes.js (and swagger docs should live there too)
+router.use("/auth", require("./auth"));
 router.use("/notes", require("./notes"));
+router.use("/users", require("./users"));
 
 module.exports = router;

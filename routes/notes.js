@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const notesController = require("../controllers/notesController");
+const { isAuthenticated } = require("../middleware/auth");
+const { validateId, validateNoteBody } = require("../middleware/validation");
 
 /**
  * @swagger
@@ -20,8 +22,20 @@ const notesController = require("../controllers/notesController");
  *       properties:
  *         title:
  *           type: string
+ *           maxLength: 100
  *         content:
  *           type: string
+ *         summary:
+ *           type: string
+ *           maxLength: 200
+ *           nullable: true
+ *         tags:
+ *           type: array
+ *           items:
+ *             type: string
+ *         isPinned:
+ *           type: boolean
+ *           default: false
  *     Note:
  *       allOf:
  *         - $ref: '#/components/schemas/NoteInput'
@@ -29,7 +43,13 @@ const notesController = require("../controllers/notesController");
  *           properties:
  *             _id:
  *               type: string
+ *             userId:
+ *               type: string
+ *               description: ID of the user who created this note
  *             createdAt:
+ *               type: string
+ *               format: date-time
+ *             updatedAt:
  *               type: string
  *               format: date-time
  */
@@ -43,6 +63,12 @@ const notesController = require("../controllers/notesController");
  *     responses:
  *       200:
  *         description: List of notes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Note'
  */
 router.get("/", notesController.getAllNotes);
 
@@ -61,12 +87,16 @@ router.get("/", notesController.getAllNotes);
  *     responses:
  *       200:
  *         description: One note
- *       404:
- *         description: Note not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Note'
  *       400:
  *         description: Invalid ID
+ *       404:
+ *         description: Note not found
  */
-router.get("/:id", notesController.getNoteById);
+router.get("/:id", validateId, notesController.getNoteById);
 
 /**
  * @swagger
@@ -74,6 +104,8 @@ router.get("/:id", notesController.getNoteById);
  *   post:
  *     summary: Create a note
  *     tags: [Notes]
+ *     security:
+ *       - sessionAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -82,11 +114,13 @@ router.get("/:id", notesController.getNoteById);
  *             $ref: '#/components/schemas/NoteInput'
  *     responses:
  *       201:
- *         description: Created (returns id)
+ *         description: Created — returns new note id
  *       400:
- *         description: Missing required fields
+ *         description: Validation error
+ *       401:
+ *         description: Not logged in
  */
-router.post("/", notesController.createNote);
+router.post("/", isAuthenticated, validateNoteBody, notesController.createNote);
 
 /**
  * @swagger
@@ -94,6 +128,8 @@ router.post("/", notesController.createNote);
  *   put:
  *     summary: Update a note
  *     tags: [Notes]
+ *     security:
+ *       - sessionAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -109,12 +145,14 @@ router.post("/", notesController.createNote);
  *     responses:
  *       204:
  *         description: Updated successfully
+ *       400:
+ *         description: Validation error or invalid ID
+ *       401:
+ *         description: Not logged in
  *       404:
  *         description: Note not found
- *       400:
- *         description: Missing required fields or invalid ID
  */
-router.put("/:id", notesController.updateNote);
+router.put("/:id", isAuthenticated, validateId, validateNoteBody, notesController.updateNote);
 
 /**
  * @swagger
@@ -122,6 +160,8 @@ router.put("/:id", notesController.updateNote);
  *   delete:
  *     summary: Delete a note
  *     tags: [Notes]
+ *     security:
+ *       - sessionAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -131,11 +171,13 @@ router.put("/:id", notesController.updateNote);
  *     responses:
  *       200:
  *         description: Deleted successfully
- *       404:
- *         description: Note not found
  *       400:
  *         description: Invalid ID
+ *       401:
+ *         description: Not logged in
+ *       404:
+ *         description: Note not found
  */
-router.delete("/:id", notesController.deleteNote);
+router.delete("/:id", isAuthenticated, validateId, notesController.deleteNote);
 
 module.exports = router;

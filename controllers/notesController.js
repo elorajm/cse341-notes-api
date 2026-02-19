@@ -1,144 +1,98 @@
 const { ObjectId } = require("mongodb");
+const createError = require("http-errors");
 
-// Helper: get notes collection from app.locals.db
 function getNotesCollection(req) {
   const db = req.app.locals.db;
-  if (!db) {
-    throw new Error("Database not available. Did MongoDB connect?");
-  }
+  if (!db) throw createError(503, "Database not available");
   return db.collection("notes");
 }
 
 // GET /notes
-async function getAllNotes(req, res) {
+async function getAllNotes(req, res, next) {
   try {
-    const notesCollection = getNotesCollection(req);
-
-    const notes = await notesCollection
+    const notes = await getNotesCollection(req)
       .find({})
       .sort({ createdAt: -1 })
       .toArray();
-
-    return res.status(200).json(notes);
+    res.status(200).json(notes);
   } catch (err) {
-    console.error("getAllNotes error:", err);
-    return res.status(500).json({ error: "Internal server error" });
+    next(err);
   }
 }
 
 // GET /notes/:id
-async function getNoteById(req, res) {
+async function getNoteById(req, res, next) {
   try {
-    const { id } = req.params;
-
-    if (!ObjectId.isValid(id)) {
-      return res.status(400).json({ error: "Invalid note id" });
-    }
-
-    const notesCollection = getNotesCollection(req);
-    const note = await notesCollection.findOne({ _id: new ObjectId(id) });
-
-    if (!note) {
-      return res.status(404).json({ message: "Note not found" });
-    }
-
-    return res.status(200).json(note);
+    const note = await getNotesCollection(req).findOne({
+      _id: new ObjectId(req.params.id)
+    });
+    if (!note) return next(createError(404, "Note not found"));
+    res.status(200).json(note);
   } catch (err) {
-    console.error("getNoteById error:", err);
-    return res.status(500).json({ error: "Internal server error" });
+    next(err);
   }
 }
 
 // POST /notes
-async function createNote(req, res) {
+async function createNote(req, res, next) {
   try {
-    const { title, content } = req.body;
+    const { title, content, summary, tags, isPinned } = req.body;
+    const now = new Date();
 
-    if (!title || !content) {
-      return res
-        .status(400)
-        .json({ message: "Missing fields: title, content" });
-    }
-
-    const notesCollection = getNotesCollection(req);
-
-    const newNote = {
+    const result = await getNotesCollection(req).insertOne({
       title,
       content,
-      createdAt: new Date()
-    };
+      summary: summary || null,
+      tags: tags || [],
+      isPinned: isPinned || false,
+      userId: req.user._id.toString(),
+      createdAt: now,
+      updatedAt: now
+    });
 
-    const result = await notesCollection.insertOne(newNote);
-
-    return res.status(201).json({ id: result.insertedId.toString() });
+    res.status(201).json({ id: result.insertedId.toString() });
   } catch (err) {
-    console.error("createNote error:", err);
-    return res.status(500).json({ error: "Internal server error" });
+    next(err);
   }
 }
 
 // PUT /notes/:id
-async function updateNote(req, res) {
+async function updateNote(req, res, next) {
   try {
-    const { id } = req.params;
-    const { title, content } = req.body;
+    const { title, content, summary, tags, isPinned } = req.body;
 
-    if (!ObjectId.isValid(id)) {
-      return res.status(400).json({ error: "Invalid note id" });
-    }
-
-    if (!title || !content) {
-      return res
-        .status(400)
-        .json({ message: "Missing fields: title, content" });
-    }
-
-    const notesCollection = getNotesCollection(req);
-
-    const result = await notesCollection.updateOne(
-      { _id: new ObjectId(id) },
-      { $set: { title, content } }
+    const result = await getNotesCollection(req).updateOne(
+      { _id: new ObjectId(req.params.id) },
+      {
+        $set: {
+          title,
+          content,
+          summary: summary ?? null,
+          tags: tags ?? [],
+          isPinned: isPinned ?? false,
+          updatedAt: new Date()
+        }
+      }
     );
 
-    if (result.matchedCount === 0) {
-      return res.status(404).json({ message: "Note not found" });
-    }
-
-    // 204 = success with no body
-    return res.status(204).send();
+    if (result.matchedCount === 0) return next(createError(404, "Note not found"));
+    res.status(204).send();
   } catch (err) {
-    console.error("updateNote error:", err);
-    return res.status(500).json({ error: "Internal server error" });
+    next(err);
   }
 }
 
 // DELETE /notes/:id
-async function deleteNote(req, res) {
+async function deleteNote(req, res, next) {
   try {
-    const { id } = req.params;
-
-    if (!ObjectId.isValid(id)) {
-      return res.status(400).json({ error: "Invalid note id" });
-    }
-
-    const notesCollection = getNotesCollection(req);
-    const result = await notesCollection.deleteOne({ _id: new ObjectId(id) });
-
-    if (result.deletedCount === 0) {
-      return res.status(404).json({ message: "Note not found" });
-    }
-
-    return res.status(200).json({ message: "Note deleted" });
+    const result = await getNotesCollection(req).deleteOne({
+      _id: new ObjectId(req.params.id)
+    });
+    if (result.deletedCount === 0) return next(createError(404, "Note not found"));
+    res.status(200).json({ message: "Note deleted" });
   } catch (err) {
-    console.error("deleteNote error:", err);
-    return res.status(500).json({ error: "Internal server error" });
+    next(err);
   }
 }
 
-module.exports = {
-  getAllNotes,
-  getNoteById,
-  createNote,
-  updateNote,
-  deleteNote
-};
+module.exports = { getAllNotes, getNoteById, createNote, updateNote, deleteNote };
