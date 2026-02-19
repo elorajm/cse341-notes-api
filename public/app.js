@@ -80,10 +80,10 @@ async function saveNote() {
   const body = {
     title,
     content,
-    summary:  fSummary.value.trim() || null,
     tags,
     isPinned: fPinned.checked
   };
+  if (fSummary.value.trim()) body.summary = fSummary.value.trim();
 
   try {
     const url    = editingId ? `/notes/${editingId}` : "/notes";
